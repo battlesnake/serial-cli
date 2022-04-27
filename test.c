@@ -117,32 +117,36 @@ int main(int argc, char *argv[])
     const struct cli_command_definition *def;
     cli_expression bytecode;
 
-    ASSERT(parse_long_command_success, parse_long_command(&lang1, "", &bytecode));
+    ASSERT(parse_long_command_success, parse_long_command(&lang1, "", NULL, &bytecode));
     ASSERT(match_command_fail, match_command(&lang1, &bytecode, &def));
 
-    ASSERT(parse_long_command_invalid_token, parse_long_command(&lang1, "invalid", &bytecode));
+    ASSERT(parse_long_command_invalid_token, parse_long_command(&lang1, "invalid", NULL, &bytecode));
 
-    ASSERT(parse_long_command_success, parse_long_command(&lang1, "true", &bytecode));
+    ASSERT(parse_long_command_success, parse_long_command(&lang1, "true", NULL, &bytecode));
     ASSERT(match_command_success, match_command(&lang1, &bytecode, &def));
     ASSERT(cli_command_success, def->handler(&bytecode, def));
 
-    ASSERT(parse_long_command_success, parse_long_command(&lang1, "false", &bytecode));
+    ASSERT(parse_long_command_success, parse_long_command(&lang1, "false", NULL, &bytecode));
     ASSERT(match_command_success, match_command(&lang1, &bytecode, &def));
     ASSERT(cli_command_fail, def->handler(&bytecode, def));
 
-    ASSERT(parse_long_command_success, parse_long_command(&lang1, "set potato count to 42", &bytecode));
+    ASSERT(parse_long_command_success, parse_long_command(&lang1, "set potato count to 42", NULL, &bytecode));
     ASSERT(match_command_success, match_command(&lang1, &bytecode, &def));
     ASSERT(cli_command_success, def->handler(&bytecode, def));
 
-    ASSERT(parse_long_command_success, parse_long_command(&lang1, "set lemon count to -42", &bytecode));
+    ASSERT(parse_long_command_success, parse_long_command(&lang1, "set lemon count to -42", NULL, &bytecode));
     ASSERT(match_command_success, match_command(&lang1, &bytecode, &def));
     ASSERT(cli_command_success, def->handler(&bytecode, def));
 
-    ASSERT(parse_long_command_invalid_token, parse_long_command(&lang1, "set potato count to -1001", &bytecode));
+    ASSERT(parse_long_command_invalid_token, parse_long_command(&lang1, "set potato count to -1001", NULL, &bytecode));
 
-    ASSERT(parse_long_command_invalid_token, parse_long_command(&lang1, "set potato count to 1001", &bytecode));
+    ASSERT(parse_long_command_invalid_token, parse_long_command(&lang1, "set potato count to 1001", NULL, &bytecode));
 
-    ASSERT(parse_long_command_too_many_tokens, parse_long_command(&lang1, "bake set true potato count to false lemon count", &bytecode));
+    ASSERT(parse_long_command_too_many_tokens, parse_long_command(&lang1, "bake set true potato count to false lemon count", NULL, &bytecode));
+
+    ASSERT(parse_long_command_success, parse_long_command(&lang1, "truepotato", "truepotato" + 4, &bytecode));
+    ASSERT(match_command_success, match_command(&lang1, &bytecode, &def));
+    ASSERT(cli_command_success, def->handler(&bytecode, def));
 
     return 0;
 }

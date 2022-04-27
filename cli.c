@@ -30,13 +30,13 @@
 /*
  * Find next space or non-space
  */
-static const char *find_space(const char *begin, bool space)
+static const char *find_space(const char *begin, const char *end, bool space)
 {
     if (!begin) {
         return NULL;
     }
     const char *it;
-    for (it = begin; *it; ++it) {
+    for (it = begin; it != end && *it; ++it) {
         if ((*it == CLI_LONG_SPACE) == space) {
             return it;
         }
@@ -179,19 +179,19 @@ static bool parse_keyword(expression_token *token, const char *begin, const char
 /*
  * Parse a long command to bytecode
  */
-enum parse_long_command_result parse_long_command(const struct cli_language_definition *spec, const char *command, cli_expression *parsed)
+enum parse_long_command_result parse_long_command(const struct cli_language_definition *spec, const char *command, const char *command_end, cli_expression *parsed)
 {
     const char *it = command;
     expression_token *out_it = *parsed;
     expression_token *out_end = *parsed + CLI_MAX_TOKENS;
     const char *word_begin;
-    while ((word_begin = find_space(it, FALSE))) {
+    while ((word_begin = find_space(it, command_end, FALSE))) {
         if (out_it == out_end) {
             /* Max tokens already parsed */
             parse_error_printf("Too many tokens: %s", command);
             return parse_long_command_too_many_tokens;
         }
-        const char *word_end = find_space(word_begin, TRUE);
+        const char *word_end = find_space(word_begin, command_end, TRUE);
         parse_error_printf_str("Token:", word_begin, word_end);
         it = word_end;
         expression_token token = 0;

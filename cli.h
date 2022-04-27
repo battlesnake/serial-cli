@@ -81,7 +81,13 @@ enum cli_command_result
 struct cli_command_definition;
 
 /* Signature of command handler, called to execute command */
-typedef enum cli_command_result cli_command_handler(const cli_expression *bytecode, const struct cli_command_definition *def);
+#define CLI_COMMAND_HANDLER(handler_name, arg_bytecode, arg_definition) \
+	enum cli_command_result \
+	handler_name( \
+		const cli_expression *arg_bytecode, \
+		const struct cli_command_definition *arg_definition \
+	)
+typedef CLI_COMMAND_HANDLER(cli_command_handler, bytecode, def);
 
 /* Definition of a command: Specification of syntax, and handler callback */
 struct cli_command_definition
@@ -109,7 +115,7 @@ enum parse_long_command_result
     parse_long_command_invalid_token,
 };
 
-enum parse_long_command_result parse_long_command(const struct cli_language_definition *spec, const char *command, cli_expression *parsed);
+enum parse_long_command_result parse_long_command(const struct cli_language_definition *spec, const char *command, const char *command_end, cli_expression *parsed);
 
 /*
  * Match a bytecode command to the respective handler callback
