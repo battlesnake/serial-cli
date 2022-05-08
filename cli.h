@@ -53,6 +53,7 @@ typedef unsigned short expression_token;
 
 /* Convert keyword index (in keywords list) to command-definition value */
 #define CLI_KEYWORD_INDEX_TO_SPEC_KEYWORD(index) ((index) + (CLI_SPEC_KEYWORD_BEGIN))
+#define CLI_SPEC_KEYWORD_TO_KEYWORD_INDEX(index) ((index) - (CLI_SPEC_KEYWORD_BEGIN))
 
 /* Convert keyword bytecode value to command-definition value */
 #define CLI_EXPR_KEYWORD_TO_SPEC_KEYWORD(token) CLI_KEYWORD_INDEX_TO_SPEC_KEYWORD(CLI_EXPR_KEYWORD_TO_KEYWORD_INDEX(token))
@@ -130,6 +131,11 @@ enum match_command_result
 enum match_command_result match_command(const struct cli_language_definition *language, const cli_expression *value, const struct cli_command_definition **result);
 
 /*
+ * List all commands (ASCII-format)
+ */
+void list_all_commands(const struct cli_language_definition *language)
+
+/*
  * Debug print bytecode command
  */
 #ifdef CLI_DEBUG_PARSER
@@ -137,4 +143,9 @@ enum match_command_result match_command(const struct cli_language_definition *la
 void _print_bytecode(const struct cli_language_definition *language, const cli_expression *bytecode);
 #else
 #define print_bytecode(...) do { } while (0)
+#endif
+
+/* Sequence for a line-break in printf */
+#ifndef PRINTF_LINEBREAK
+#define PRINTF_LINEBREAK "\n"
 #endif

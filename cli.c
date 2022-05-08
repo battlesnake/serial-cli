@@ -289,3 +289,26 @@ void _print_bytecode(const struct cli_language_definition *language, const cli_e
     }
     printf(")\n");
 }
+
+void list_all_commands(const struct cli_language_definition *language)
+{
+	printf(PRINTF_LINEBREAK "Commands:" PRINTF_LINEBREAK);
+	for (const struct cli_command_definition *cmd = language->commands; cmd->handler; ++cmd) {
+		printf(">>>");
+		for (
+			const syntax_token *token = &cmd->syntax[0], *end = token + CLI_MAX_TOKENS;
+			token != end && !CLI_SPEC_IS_TERMINAL(*token);
+			++token
+		) {
+			if (CLI_SPEC_IS_KEYWORD(*token)) {
+				printf(" %s", language->keywords[CLI_SPEC_KEYWORD_TO_KEYWORD_INDEX(*token)]);
+			} else if (CLI_SPEC_IS_NUMBER(*token)) {
+				printf(" #");
+			} else {
+				printf(" !");
+			}
+		}
+		printf(PRINTF_LINEBREAK);
+	}
+	printf(PRINTF_LINEBREAK);
+}
