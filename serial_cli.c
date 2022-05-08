@@ -1,7 +1,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 
-#include "cli.h"
+#include "serial_cli.h"
 
 #ifndef NULL
 #define NULL ((void *) 0)

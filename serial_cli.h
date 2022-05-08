@@ -133,7 +133,7 @@ enum match_command_result match_command(const struct cli_language_definition *la
 /*
  * List all commands (ASCII-format)
  */
-void list_all_commands(const struct cli_language_definition *language)
+void list_all_commands(const struct cli_language_definition *language);
 
 /*
  * Debug print bytecode command
